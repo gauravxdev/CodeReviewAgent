@@ -23,7 +23,7 @@ const getAllFilesFromGit = async () => {
   }
 };
 
-function getSelectedFile(filePath: string) {
+async function getSelectedFile(filePath: string) {
   try {
     if (!filePath) {
       return { error: "File path is required" };
