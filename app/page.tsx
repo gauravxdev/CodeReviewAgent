@@ -4,7 +4,7 @@ import { promisify } from "util";
 
 const execAsync = promisify(exec);
 
-export const getAllFilesFromGit = async () => {
+const getAllFilesFromGit = async () => {
   try {
     // List all files, excluding .git, .next, and node_modules
     const { stdout } = await execAsync(
@@ -23,7 +23,7 @@ export const getAllFilesFromGit = async () => {
   }
 };
 
-async function getSelectedFile(filePath: string) {
+function getSelectedFile(filePath: string) {
   try {
     if (!filePath) {
       return { error: "File path is required" };
