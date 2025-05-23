@@ -9,6 +9,7 @@
  */
 
 import type * as agent from "../agent.js";
+import type * as fallbackReview from "../fallbackReview.js";
 import type * as tasks from "../tasks.js";
 
 import type {
@@ -27,6 +28,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   agent: typeof agent;
+  fallbackReview: typeof fallbackReview;
   tasks: typeof tasks;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

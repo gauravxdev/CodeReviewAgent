@@ -41,11 +41,16 @@ export function ReviewButton({
   };
 
   return (
-    <Button onClick={handleReview} disabled={isLoading}>
+    <Button 
+      onClick={handleReview} 
+      disabled={isLoading}
+      variant="outline"
+      size="sm"
+    >
       {isLoading ? (
         <>
           <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-          Reviewing...
+          Analyzing code...
         </>
       ) : (
         "Review File"

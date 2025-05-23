@@ -1,4 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
+
 import {
   Dialog,
   DialogContent,
@@ -7,6 +9,9 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { useTheme } from "next-themes";
 import { ReviewButton } from "./review-button";
 
 interface FileContentProps {
@@ -32,6 +37,7 @@ export function FileContent({
   selectedLine,
   onCloseDialog,
 }: FileContentProps) {
+  const { theme } = useTheme();
   console.log(lineComments);
   const getLanguageFromFileName = (fileName: string) => {
     const extension = fileName.split(".").pop()?.toLowerCase();
@@ -64,7 +70,7 @@ export function FileContent({
       style: {
         display: "block",
         backgroundColor: isHighlighted
-          ? "rgba(255, 255, 0, 0.2)"
+          ? theme === "dark" ? "rgba(255, 255, 0, 0.2)" : "rgba(255, 215, 0, 0.15)"
           : "transparent",
         borderLeft: isHighlighted ? "3px solid #ffd700" : "none",
         paddingLeft: isHighlighted ? "5px" : "0",
@@ -82,50 +88,57 @@ export function FileContent({
 
   return (
     <>
-      <Card className='border-2 border-blue-200 lg:col-span-2'>
-        <CardHeader>
-          <div className='flex items-center justify-between'>
-            <CardTitle>🗂️ File Content</CardTitle>
-            {selectedFile && (
-              <ReviewButton
-                selectedFile={selectedFile}
-                fileContent={fileContent}
-                setReview={setReview}
-              />
+      <div className='h-full bg-card flex flex-col'>
+        <div className='flex items-center justify-between p-4 border-b border-border'>
+          <div className='flex items-center gap-2'>
+            <span className='text-sm font-medium text-foreground'>{selectedFile || 'No file selected'}</span>
+            <span className='text-xs px-2 py-0.5 rounded bg-muted text-muted-foreground'>{selectedFile ? getLanguageFromFileName(selectedFile) : ''}</span>
+          </div>
+          {selectedFile && (
+            <ReviewButton
+              selectedFile={selectedFile}
+              fileContent={fileContent}
+              setReview={setReview}
+            />
+          )}
+        </div>
+        <div className='flex-1 overflow-hidden'>
+          <ScrollArea className='h-[calc(100vh-120px)]'>
+            {selectedFile ? (
+              <div className='relative'>
+                <div className='overflow-x-auto bg-card'>
+                  <SyntaxHighlighter
+                    language={getLanguageFromFileName(selectedFile)}
+                    customStyle={{
+                      margin: 0,
+                      padding: "1rem",
+                      fontSize: "0.875rem",
+                      lineHeight: "1.5",
+                      background: "transparent",
+                      maxWidth: "100%",
+                      overflowX: "auto",
+                      whiteSpace: "pre-wrap",
+                      wordBreak: "break-word",
+                      wordWrap: "break-word",
+                    }}
+                    showLineNumbers
+                    wrapLines={true}
+                    wrapLongLines={true}
+                    lineProps={lineProps}
+                    style={theme === "dark" ? vscDarkPlus : oneLight}
+                  >
+                    {fileContent}
+                  </SyntaxHighlighter>
+                </div>
+              </div>
+            ) : (
+              <div className='h-full flex items-center justify-center text-muted-foreground'>
+                <p>Select a file from the list to view its content</p>
+              </div>
             )}
-          </div>
-        </CardHeader>
-        <CardContent className='flex-1'>
-          <div className='h-[650px]'>
-            <ScrollArea className='h-full'>
-              {selectedFile ? (
-                <div className='relative h-full'>
-                  <div className='rounded-md overflow-hidden h-full'>
-                    <SyntaxHighlighter
-                      language={getLanguageFromFileName(selectedFile)}
-                      customStyle={{
-                        margin: 0,
-                        borderRadius: "0.375rem",
-                        fontSize: "0.875rem",
-                        lineHeight: "1.5",
-                      }}
-                      showLineNumbers
-                      wrapLines
-                      lineProps={lineProps}
-                    >
-                      {fileContent}
-                    </SyntaxHighlighter>
-                  </div>
-                </div>
-              ) : (
-                <div className='h-full flex items-center justify-center text-muted-foreground'>
-                  <p>Select a file from the list to view its content</p>
-                </div>
-              )}
-            </ScrollArea>
-          </div>
-        </CardContent>
-      </Card>
+          </ScrollArea>
+        </div>
+      </div>
 
       <Dialog open={showDialog} onOpenChange={onCloseDialog}>
         <DialogContent>
