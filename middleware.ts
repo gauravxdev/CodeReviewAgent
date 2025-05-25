@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { isAuthEnabled } from './app/env';
 
 // Define public routes that don't require authentication
 const publicRoutes = [
@@ -28,6 +29,11 @@ const systemRoutes = [
 // This is the main middleware function
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  
+  // Skip authentication checks if auth is not enabled
+  if (!isAuthEnabled()) {
+    return NextResponse.next();
+  }
   
   // First, check if it's a system route that doesn't need auth
   if (isMatchingRoute(pathname, systemRoutes)) {

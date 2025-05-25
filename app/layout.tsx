@@ -5,8 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import { VisualEffects } from "@/components/visual-effects";
 import { ClientOnly } from "@/components/client-only";
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
+import { AuthProvider } from "@/components/auth-provider";
 
 // Skip font modules entirely to avoid Turbopack errors
 
@@ -21,10 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: dark
-      }}>
+    <AuthProvider>
       {/* Using sign-in and sign-up pages from our app, not Clerk hosted pages */}
       <html lang='en' suppressHydrationWarning>
         <body
@@ -40,6 +36,6 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </AuthProvider>
   );
 }
