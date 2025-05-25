@@ -55,15 +55,15 @@ AI Agent Code Review is a modern web application that provides **automated code 
 
 ### Prerequisites
 - **Node.js 18+** (LTS recommended)
-- **Google Gemini API Key** ([Get one here](https://ai.google.dev/))
+- **Google Gemini API Key** ([Get one here](https://aistudio.google.com/apikey))
 - **Convex Account** ([Sign up here](https://convex.dev/))
 
 ### Installation Steps
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/kulkarniankita/ai-agent-code-review
-   cd ai-agent-code-review
+   git clone https://github.com/IsmartGaurav/CodeReviewAgent
+   cd CodeReviewAgent
    ```
 
 2. **Install Dependencies**

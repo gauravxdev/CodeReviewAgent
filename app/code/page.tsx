@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Navbar } from '@/components/navbar';
 import { ClientOnly } from '@/components/client-only';
+import { useUser } from '@clerk/nextjs';
 
 interface FileData {
   name: string;
@@ -64,6 +65,15 @@ export default function CodePage() {
   const [logs, setLogs] = useState<string[]>([]);
   const [loadedFromCache, setLoadedFromCache] = useState(false);
   const router = useRouter();
+  const { isLoaded, isSignedIn } = useUser();
+  
+  // Client-side authentication check
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      console.log('User not authenticated, redirecting to sign-up page');
+      router.replace('/sign-up?redirect_url=' + encodeURIComponent(window.location.href));
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   // Parse GitHub repository URL
   const parseGitHubUrl = (url: string) => {

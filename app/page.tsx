@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { FAQSection } from '@/components/faq-section';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Navbar } from '@/components/navbar';
-import { useRef } from 'react';
+import { useRef, Suspense } from 'react';
 import {
   Card,
   CardHeader,
@@ -12,6 +12,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { HeroGrid } from '@/components/hero-grid';
+import { AuthRedirectHandler } from '@/components/auth-redirect-handler';
 
 // Optimized animation variants with reduced complexity for better performance
 const fadeIn = {
@@ -72,8 +73,15 @@ export default function LandingPage() {
   useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   
+  // Add the AuthRedirectHandler for professional modal authentication
+  
   return (
     <div ref={ref} className="relative min-h-screen bg-background text-foreground overflow-hidden">
+      {/* Auth redirect handler for automatic sign-in modal */}
+      <Suspense fallback={null}>
+        <AuthRedirectHandler />
+      </Suspense>
+      
       {/* Background Effects */}
       <div className="fixed inset-0 bg-white dark:bg-[#030014] z-0" />
       <div className="fixed inset-0 bg-grid-neutral-800/[0.03] dark:bg-grid-white/[0.02] bg-[length:50px_50px] z-0" style={{ backgroundImage: "url('/grid.svg')" }} />

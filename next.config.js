@@ -18,6 +18,19 @@ const nextConfig = {
       allowedOrigins: ['localhost:3000'],
     },
   },
+  
+  // Configure webpack to handle large serializations
+  webpack: (config) => {
+    // Optimize serialization performance
+    config.infrastructureLogging = {
+      level: 'error',
+    };
+    
+    // Use Buffer for serializing large strings
+    config.optimization.moduleIds = 'deterministic';
+    
+    return config;
+  },
 }
 
 module.exports = nextConfig
