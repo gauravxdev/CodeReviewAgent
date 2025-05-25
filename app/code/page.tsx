@@ -10,8 +10,17 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Navbar } from '@/components/navbar';
 import { ClientOnly } from '@/components/client-only';
-// Import isAuthEnabled to check if auth should be used
 import { isAuthEnabled } from '@/app/env';
+
+// Add type definition for Clerk on the window object
+declare global {
+  interface Window {
+    Clerk?: {
+      load: () => Promise<void>;
+      user: unknown | null;
+    };
+  }
+}
 
 interface FileData {
   name: string;
@@ -55,30 +64,51 @@ const ALLOWED_EXTENSIONS = [
   '.sh', '.bash'
 ];
 
-// Auth checker component that only runs on client side
-function AuthChecker() {
+// Auth component to handle authentication redirects
+function AuthRedirect() {
   const router = useRouter();
   
   useEffect(() => {
-    // Only check auth if it's enabled
-    if (isAuthEnabled()) {
-      // Dynamically import Clerk's useUser hook
-      const checkAuth = async () => {
-        try {
-          const { useUser } = await import('@clerk/nextjs');
-          const { isLoaded, isSignedIn } = useUser();
+    // Skip auth check if auth is disabled
+    if (!isAuthEnabled()) {
+      return;
+    }
+    
+    // Simple approach: just import the auth module and check on client-side
+    let isHandlingRedirect = false;
+    
+    const checkAuth = async () => {
+      if (isHandlingRedirect) return;
+      isHandlingRedirect = true;
+      
+      try {
+        // Dynamic import of Clerk - just importing the package, not using any hooks
+        await import('@clerk/nextjs');
+        
+        // We need to check auth status another way - not using hooks directly
+        // Use the Clerk JS client instead with proper typing
+        const Clerk = window.Clerk;
+        
+        if (Clerk) {
+          // Wait for Clerk to initialize
+          await Clerk.load();
           
-          if (isLoaded && !isSignedIn) {
+          if (!Clerk.user) {
             console.log('User not authenticated, redirecting to sign-up page');
             router.replace('/sign-up?redirect_url=' + encodeURIComponent(window.location.href));
           }
-        } catch (error) {
-          console.error('Error checking authentication:', error);
         }
-      };
-      
-      checkAuth();
-    }
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+        // In case of error, we allow access
+      } finally {
+        isHandlingRedirect = false;
+      }
+    };
+    
+    // Check auth after a short delay to ensure client-side rendering is complete
+    const timer = setTimeout(checkAuth, 100);
+    return () => clearTimeout(timer);
   }, [router]);
   
   return null;
@@ -446,7 +476,7 @@ export default function CodePage() {
     <ClientOnly>
       <div className="min-h-screen bg-background text-foreground">
         {/* Client-side only auth check */}
-        <AuthChecker />
+        <AuthRedirect />
         <Navbar />
         <div className="p-6">
         <div className="max-w-4xl mx-auto">
