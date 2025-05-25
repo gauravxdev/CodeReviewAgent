@@ -10,7 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Navbar } from '@/components/navbar';
 import { ClientOnly } from '@/components/client-only';
-import { useUser } from '@clerk/nextjs';
+// Import isAuthEnabled to check if auth should be used
+import { isAuthEnabled } from '@/app/env';
 
 interface FileData {
   name: string;
@@ -54,6 +55,35 @@ const ALLOWED_EXTENSIONS = [
   '.sh', '.bash'
 ];
 
+// Auth checker component that only runs on client side
+function AuthChecker() {
+  const router = useRouter();
+  
+  useEffect(() => {
+    // Only check auth if it's enabled
+    if (isAuthEnabled()) {
+      // Dynamically import Clerk's useUser hook
+      const checkAuth = async () => {
+        try {
+          const { useUser } = await import('@clerk/nextjs');
+          const { isLoaded, isSignedIn } = useUser();
+          
+          if (isLoaded && !isSignedIn) {
+            console.log('User not authenticated, redirecting to sign-up page');
+            router.replace('/sign-up?redirect_url=' + encodeURIComponent(window.location.href));
+          }
+        } catch (error) {
+          console.error('Error checking authentication:', error);
+        }
+      };
+      
+      checkAuth();
+    }
+  }, [router]);
+  
+  return null;
+}
+
 export default function CodePage() {
   const [repoUrl, setRepoUrl] = useState('');
   const [repoOwner, setRepoOwner] = useState('');
@@ -65,15 +95,6 @@ export default function CodePage() {
   const [logs, setLogs] = useState<string[]>([]);
   const [loadedFromCache, setLoadedFromCache] = useState(false);
   const router = useRouter();
-  const { isLoaded, isSignedIn } = useUser();
-  
-  // Client-side authentication check
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      console.log('User not authenticated, redirecting to sign-up page');
-      router.replace('/sign-up?redirect_url=' + encodeURIComponent(window.location.href));
-    }
-  }, [isLoaded, isSignedIn, router]);
 
   // Parse GitHub repository URL
   const parseGitHubUrl = (url: string) => {
@@ -424,6 +445,8 @@ export default function CodePage() {
   return (
     <ClientOnly>
       <div className="min-h-screen bg-background text-foreground">
+        {/* Client-side only auth check */}
+        <AuthChecker />
         <Navbar />
         <div className="p-6">
         <div className="max-w-4xl mx-auto">
