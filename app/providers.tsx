@@ -1,7 +1,7 @@
 "use client";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/components/auth-provider";
-import { ConvexClientProvider } from "../ConvexClientProvider";
+import { ConvexClientProvider } from "./ConvexClientProvider";
 import { VisualEffects } from "@/components/visual-effects";
 import { ClientOnly } from "@/components/client-only";
 import { Toaster } from "sonner";
