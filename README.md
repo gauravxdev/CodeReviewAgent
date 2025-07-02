@@ -56,7 +56,7 @@ An advanced AI-powered code review platform that leverages **Google Gemini 1.5 P
 
 1. **Clone and install**
    ```bash
-   git clone https://github.com/kulkarniankita/ai-agent-code-review.git
+   git clone https://github.com/gauravxdev/CodeReviewAgent.git
    cd ai-agent-code-review
    npm install
    ```
@@ -186,13 +186,13 @@ npm run lint         # Run ESLint
 ### Environment Variables
 ```bash
 # Required
-GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key
-
-# Alternative naming (both supported)
-GEMINI_API_KEY=your_gemini_api_key
-
-# Convex (auto-generated)
-CONVEX_DEPLOYMENT=your_deployment_url
+CONVEX_DEPLOYMENT=your-convex-deployment-url
+NEXT_PUBLIC_CONVEX_URL=https://your-convex-url.convex.cloud
+GOOGLE_GENERATIVE_AI_API_KEY=your-google-gemini-api-key
+GEMINI_API_KEY=your-gemini-api-key
+NEXT_PUBLIC_GITHUB_TOKEN=your-github-token
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your-clerk-publishable-key
+CLERK_SECRET_KEY=your-clerk-secret-key
 ```
 
 ### Supported Languages
@@ -206,7 +206,7 @@ The AI can review code in 20+ languages including:
 ## 🚀 Deployment
 
 ### Vercel (Recommended)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/kulkarniankita/ai-agent-code-review)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/gauravxdev/CodeReviewAgent)
 
 1. Connect your GitHub repository
 2. Add environment variables
@@ -283,8 +283,7 @@ This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for
 
 ## 📞 Support
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/kulkarniankita/ai-agent-code-review/issues)
-- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/kulkarniankita/ai-agent-code-review/discussions)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/gauravxdev/CodeReviewAgent/issues)
 - 📧 **Contact**: Open an issue for support
 
 ---

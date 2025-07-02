@@ -1,50 +1,45 @@
 @keyframes float {
-  0% {
-    transform: translateY(0px);
+  0%, 100% {
+    transform: translateY(0);
   }
   50% {
     transform: translateY(-15px);
   }
-  100% {
-    transform: translateY(0px);
-  }
 }
 
 @keyframes glow {
-  0% {
+  0%, 100% {
     opacity: 0.3;
   }
   50% {
     opacity: 0.8;
   }
-  100% {
-    opacity: 0.3;
-  }
 }
 
 @keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
 
 .animate-float {
-  animation: float 6s ease-in-out infinite;
+  animation: float 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
 }
 
 .animate-glow {
-  animation: glow 8s ease-in-out infinite;
+  animation: glow 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: opacity;
 }
 
 .animate-rotate {
   animation: rotate 20s linear infinite;
+  will-change: transform;
 }
 
 .animate-glow-fast {
-  animation: glow 4s ease-in-out infinite;
+  animation: glow 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: opacity;
 }
 
 .bg-grid-light {
@@ -52,6 +47,8 @@
   background-image: 
     linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .dark .bg-grid-dark {
@@ -59,10 +56,13 @@
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .glow-effect {
   position: relative;
+  transform: translateZ(0);
 }
 
 .glow-effect::before {
@@ -73,8 +73,10 @@
   border-radius: inherit;
   z-index: -1;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
   filter: blur(15px);
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 .dark .glow-effect::before {
@@ -88,7 +90,8 @@
 
 .code-glow {
   box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
-  transition: box-shadow 0.5s ease;
+  transition: box-shadow 0.3s ease;
+  transform: translateZ(0);
 }
 
 .dark .code-glow {
@@ -97,8 +100,4 @@
 
 .code-glow:hover {
   box-shadow: 0 0 40px rgba(59, 130, 246, 0.25);
-}
-
-.dark .code-glow:hover {
-  box-shadow: 0 0 60px rgba(59, 130, 246, 0.3);
 }

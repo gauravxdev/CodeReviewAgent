@@ -100,7 +100,7 @@ export function Navbar() {
 
           <div className="flex items-center space-x-3">
             <a 
-              href="https://github.com/kulkarniankita/ai-agent-code-review" 
+              href="https://github.com/gauravxdev/CodeReviewAgent" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center justify-center h-8 w-8 rounded-full bg-muted hover:bg-muted/80 transition-colors duration-300 text-foreground"
