@@ -1,29 +1,27 @@
 "use client"
 
 import * as React from "react"
-import { ThemeProvider as NextThemesProvider } from "next-themes"
+import { ThemeProvider as NextThemesProvider, type ThemeProviderProps } from "next-themes"
 
-interface ThemeProviderProps {
-  children: React.ReactNode;
-  defaultTheme?: "light" | "dark" | "system";
-  storageKey?: string;
-  disableTransitionOnChange?: boolean; 
-}
+export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+  // Prevent hydration mismatch by rendering only on client side
+  const [mounted, setMounted] = React.useState(false)
+  
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
-export function ThemeProvider({
-  children,
-  defaultTheme = "system",
-  storageKey = "theme",
-  disableTransitionOnChange = false,
-  ...props
-}: ThemeProviderProps & Record<string, unknown>) {
+  if (!mounted) {
+    return <>{children}</>
+  }
+
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme={defaultTheme}
-      storageKey={storageKey}
-      disableTransitionOnChange={disableTransitionOnChange}
+      defaultTheme="system"
       enableSystem
+      disableTransitionOnChange
+      storageKey="theme"
       {...props}
     >
       {children}

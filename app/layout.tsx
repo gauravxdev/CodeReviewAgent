@@ -18,18 +18,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-      <AuthProvider>
-        <html lang="en" suppressHydrationWarning>
-          <body className="antialiased bg-background text-foreground" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <body className="antialiased bg-background text-foreground">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>
             <ClientOnly>
               <VisualEffects />
             </ClientOnly>
             <ConvexClientProvider>{children}</ConvexClientProvider>
-            <Toaster richColors position="top-right" theme="system" />
-          </body>
-        </html>
-      </AuthProvider>
-    </ThemeProvider>
+            <Toaster richColors position="top-right" />
+          </AuthProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
